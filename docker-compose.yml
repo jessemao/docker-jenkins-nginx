@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  jenkins:
+    image: jenkinsci/blueocean:1.24.6
+    container_name: jenkins
+    user: root
+    ports:
+      - '8080:8080'
+      - '50000:50000'
+    volumes:
+      - ./jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: always
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - '80:80'
+      #- '8443:443'
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./logs/nginx/jenkins:/var/log/nginx/jenkins
+      #- ${NGINX_SSL:-./ssl}:/etc/ssl:ro
+    restart: always
